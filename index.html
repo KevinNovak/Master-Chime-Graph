@@ -94,6 +94,8 @@ var svg = d3.select("body").append("svg")
 var zoom = d3.behavior.zoom()
     .on("zoom", draw);
 
+zoom.scaleExtent([0.0002, 1]);
+
 var gradient = svg.append("defs").append("linearGradient")
     .attr("id", "gradient")
     .attr("x2", "0%")
