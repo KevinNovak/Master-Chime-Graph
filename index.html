@@ -1,7 +1,7 @@
 
 <!DOCTYPE html>
 <meta charset="utf-8">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script>
+<script src="d3/d3.js"></script>
 <style>
 
 svg {
@@ -45,23 +45,28 @@ rect.pane {
 </style>
 <body>
 <script>
-
 var margin = {top: 20, right: 60, bottom: 30, left: 20},
     width = 960 - margin.left - margin.right,
     height = 500 - margin.top - margin.bottom;
 
-var parseDate = d3.time.format("%Y-%m-%d").parse,
-    formatDate = d3.time.format("%Y");
-
+// =============================================
+// Parsing Data
+// =============================================
 var parseFullDate = d3.time.format("%Y-%m-%dT%H:%M:%S").parse,
     formatDate = d3.time.format("%Y");
 
+// =============================================
+// Scales
+// =============================================
 var x = d3.time.scale()
     .range([0, width]);
 
 var y = d3.scale.linear()
     .range([height, 0]);
 
+// =============================================
+// Axes
+// =============================================
 var xAxis = d3.svg.axis()
     .scale(x)
     .orient("bottom")
@@ -94,6 +99,9 @@ var svg = d3.select("body").append("svg")
 var zoom = d3.behavior.zoom()
     .on("zoom", draw);
 
+// =============================================
+// Min and Max Zoom
+// =============================================
 zoom.scaleExtent([0.0002, 1]);
 
 var gradient = svg.append("defs").append("linearGradient")
@@ -142,12 +150,24 @@ svg.append("rect")
     .attr("height", height)
     .call(zoom);
 
-// var back7days = new Date();
-// back7days.setDate(back7days.getDate()-7);
-//
-// var tomorrow = new Date();
-// tomorrow.setDate(tomorrow.getDate()+1);
+// =============================================
+// Relative Dates
+// =============================================
+var lastweek = new Date();
+lastweek.setDate(lastweek.getDate()-7);
 
+var yesterday = new Date();
+yesterday.setDate(yesterday.getDate()-1);
+
+var today = new Date();
+today.setDate(today.getDate());
+
+var tomorrow = new Date();
+tomorrow.setDate(tomorrow.getDate()+1);
+
+// =============================================
+// Ajax Call
+// =============================================
 // $.ajax({
 //
 //   url: 'http://104.6.112.60:4000/traffic',
@@ -155,11 +175,11 @@ svg.append("rect")
 //   success: function(data) {
 //
 //     data.forEach(function(d) {
-//          d.date = parseDate(d.date);
+//          d.date = parseFullDate(d.date);
 //          d.value = +d.value;
 //        });
 //
-//        x.domain([back7days, tomorrow]);
+//        x.domain([yesterday, tomorrow]);
 //        y.domain([0, d3.max(data, function(d) { return d.value; })]);
 //        zoom.x(x);
 //
@@ -171,12 +191,10 @@ svg.append("rect")
 //
 //
 // });
-var back7days = new Date();
-back7days.setDate(back7days.getDate()-7);
 
-var tomorrow = new Date();
-tomorrow.setDate(tomorrow.getDate()+1);
-
+// =============================================
+// Reading Data
+// =============================================
 d3.csv("readme-flights.csv", function(error, data) {
   if (error) throw error;
 
@@ -186,8 +204,11 @@ d3.csv("readme-flights.csv", function(error, data) {
     d.value = +d.value;
   });
 
+// =============================================
+// Default View
+// =============================================
   // months go from 0 to 11
-  x.domain([new Date(2015, 08, 22, 8), new Date(2015, 08, 22, 21)]);
+  x.domain([yesterday, today]);
   y.domain([0, d3.max(data, function(d) { return d.value; })]);
   zoom.x(x);
 
@@ -196,6 +217,9 @@ d3.csv("readme-flights.csv", function(error, data) {
   draw();
 });
 
+// =============================================
+// Draw Graph
+// =============================================
 function draw() {
   svg.select("g.x.axis").call(xAxis);
   svg.select("g.y.axis").call(yAxis);
