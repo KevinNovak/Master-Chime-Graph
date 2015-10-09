@@ -12,21 +12,21 @@ svg {
   shape-rendering: crispEdges;
 }
 
-.axis path, .axis line {
-  fill: none;
-  stroke-width: .5px;
-}
-
-.x.axis path {
-  stroke: #000;
-}
-
 .x.axis line {
   stroke: #fff;
   stroke-opacity: .5;
 }
 
-.y.axis line {
+.x.axis .minor {
+  stroke-opacity: .5;
+}
+
+.x.axis path {
+  display: none;
+}
+
+.y.axis line, .y.axis path {
+  fill: none;
   stroke: #ddd;
 }
 
@@ -102,7 +102,7 @@ var zoom = d3.behavior.zoom()
 // =============================================
 // Min and Max Zoom
 // =============================================
-zoom.scaleExtent([0.0002, 1]);
+zoom.scaleExtent([0.0002, 2.0]);
 
 var gradient = svg.append("defs").append("linearGradient")
     .attr("id", "gradient")
