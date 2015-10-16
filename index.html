@@ -157,6 +157,8 @@ lastweek.setDate(lastweek.getDate()-7);
 
 var yesterday = new Date();
 yesterday.setDate(yesterday.getDate()-1);
+//change hours:
+//yesterday.setHours(yesterday.getHours() - 14);
 
 var today = new Date();
 today.setDate(today.getDate());
@@ -224,7 +226,6 @@ function draw() {
   svg.select("g.y.axis").call(yAxis);
   svg.select("path.area").attr("d", area);
   svg.select("path.line").attr("d", line);
-
 }
 
 </script>
